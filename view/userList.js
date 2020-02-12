@@ -1,4 +1,11 @@
-module.exports.userList = function() {
+module.exports.userList = function(rows) {
+    let users = '';
+    for (row of rows) {
+        users += '<tr>';
+        users += `<td>${row.uid}</td><td>${row.name}</td><td>${row.deptId}</td>
+                    <td>${row.tel}</td><td>${row.regDate}</td>`;
+        users += '</tr>';
+    }
     return `
 <!DOCTYPE html>
 <html lang="ko">
@@ -57,19 +64,25 @@ module.exports.userList = function() {
                 </ul>
             </div>
             <div class="col-10">
-                <div class="row" style="margin-left: 10px">
-                    <div class="col-12"><h3>자기 소개</h3></div>
-                    <div class="col-12"><hr></div>
-                    <div class="col-3">
-                        사진 영역
-                    </div>
-                    <div class="col-8">
-                        <p>자기 소개</p>
-                    </div>
-                    <div class="col-1">
-                        비고 영역
-                    </div>
-                </div>
+            <div class="row" style="margin-left: 10px">
+            <div class="col-12"><h3>사용자 조회</h3></div>
+            <div class="col-12"><hr></div>
+            <div class="col-11">
+                <table class="table table-condensed table-hover">
+                    <thead class="thead-light">
+                        <tr class="active">
+                            <th scope="col">아이디</th><th scope="col">이름</th>
+                            <th scope="col">부서</th><th scope="col">전화번호</th>
+                            <th scope="col">등록일자</th><th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-1"></div>
+        </div>
             </div>
         </div>
     </div>

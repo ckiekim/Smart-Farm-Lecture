@@ -25,8 +25,8 @@ router.get('/dept101', function(req, res) {
 router.get('/list', function(req, res) {
     dbModule.getAllUsers(function(rows) {
         let view = require('./view/userList');
-        let html = view.userList();
-        console.log(rows);
+        let html = view.userList(rows);
+        //console.log(rows);
         res.send(html);
     });
 });
