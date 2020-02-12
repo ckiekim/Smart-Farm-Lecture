@@ -10,19 +10,11 @@ router.get('/dept', function(req, res) {
     });
     res.send('userRouter.js: dept');
 });
-
-router.get('/register', function(req, res) {
-    let db = new sqlite3.Database("db/smartfarm.db");
-    let sql = `SELECT * FROM dept`;
-    db.all(sql, function(err, rows) {
-        if (err) {
-            console.error('getAllDepts DB 오류', err);
-            return;
-        }
+router.get('/list', function(req, res) {
+    dbModule.getAllUsers(function(rows) {
         console.log(rows);
     });
-    db.close();
-    res.send('userRouter.js');
+    res.send('userRouter.js: list');
 });
 
 module.exports = router;

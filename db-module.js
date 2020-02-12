@@ -12,5 +12,17 @@ module.exports = {
             callback(rows);
         });
         db.close();
+    },
+    getAllUsers: function(callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `SELECT * FROM user`;
+        db.all(sql, function(err, rows) {
+            if (err) {
+                console.error('getAllUsers DB 오류', err);
+                return;
+            }
+            callback(rows);
+        });
+        db.close();
     }
 }
