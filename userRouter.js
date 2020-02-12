@@ -24,9 +24,11 @@ router.get('/dept101', function(req, res) {
 });
 router.get('/list', function(req, res) {
     dbModule.getAllUsers(function(rows) {
+        let view = require('./view/userList');
+        let html = view.userList();
         console.log(rows);
+        res.send(html);
     });
-    res.send('userRouter.js: list');
 });
 router.get('/register', function(req, res) {
     dbModule.registerUser('sales', '1234', '강영업', 102, '01023456782', function() {
