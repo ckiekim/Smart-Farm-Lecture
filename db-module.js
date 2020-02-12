@@ -13,6 +13,20 @@ module.exports = {
         });
         db.close();
     },
+    getDept: function(did, callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `SELECT * FROM dept where did=?`;
+        let stmt = db.prepare(sql);
+        stmt.get(did, function(err, row) {
+            if (err) {
+                console.error('getDept DB 오류', err);
+                return;
+            }
+            callback(row);
+        });
+        stmt.finalize();
+        db.close();
+    },
     getAllUsers: function(callback) {
         let db = new sqlite3.Database("db/smartfarm.db");
         let sql = `SELECT * FROM user`;
@@ -23,6 +37,20 @@ module.exports = {
             }
             callback(rows);
         });
+        db.close();
+    },
+    registerUser: function(uid, password, name, deptId, tel, callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `INSERT INTO user(uid, password, name, deptId, tel) values (?,?,?,?,?)`;
+        let stmt = db.prepare(sql);
+        stmt.run(uid, password, name, deptId, tel, function(err, row) {
+            if (err) {
+                console.error('registerUser DB 오류', err);
+                return;
+            }
+            callback();
+        });
+        stmt.finalize();
         db.close();
     }
 }
