@@ -2,8 +2,12 @@ module.exports.userList = function(rows) {
     let users = '';
     for (row of rows) {
         users += '<tr>';
-        users += `<td>${row.uid}</td><td>${row.name}</td><td>${row.deptId}</td>
-                    <td>${row.tel}</td><td>${row.regDate}</td>`;
+        users += `<td>${row.uid}</td>
+                    <td><a href="${row.name}.html">${row.name}</a></td>
+                    <td>${row.deptName}</td><td>${row.tel}</td><td>${row.ts}</td>
+                    <td><a href="/user/update/uid/${row.uid}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
+                        <a href="/user/password/uid/${row.uid}"><i class="fas fa-key"></i>&nbsp;&nbsp;
+                        <a href="/user/delete/uid/${row.uid}"><i class="fas fa-trash-alt"></i></td>`;
         users += '</tr>';
     }
     return `
@@ -15,6 +19,8 @@ module.exports.userList = function(rows) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -26,7 +32,7 @@ module.exports.userList = function(rows) {
             <img src="greenlogo.png" class="d-inline-block align-top" alt="">&nbsp;&nbsp;&nbsp;
             <ul class="nav nav-pills mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Home</a>
+                    <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">로그아웃</a>

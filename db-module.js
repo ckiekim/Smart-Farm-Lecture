@@ -29,7 +29,7 @@ module.exports = {
     },
     getAllUsers: function(callback) {
         let db = new sqlite3.Database("db/smartfarm.db");
-        let sql = `SELECT * FROM user`;
+        let sql = `SELECT l.uid, l.name, r.name deptName, l.tel, strftime('%Y-%m-%d', regDate, 'localtime') ts FROM user l join dept r on l.deptId = r.did`;
         db.all(sql, function(err, rows) {
             if (err) {
                 console.error('getAllUsers DB 오류', err);
