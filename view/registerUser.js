@@ -1,7 +1,7 @@
-module.exports.registerUser = function(rows) {
-    let depts = '';
-    for (row of rows) {
-        depts += `<option value="${row.did}">${row.name}</option>`;
+module.exports.registerUser = function(deptObj) {
+    let options = '';
+    for (deptItem of deptObj) {
+        options += `<option value="${deptItem.did}">${deptItem.name}</option>`;
     }
     return `
 <!DOCTYPE html>
@@ -81,10 +81,14 @@ module.exports.registerUser = function(rows) {
                                     <td><input type="password" class="form-control" id="pswd2" name="pswd2"></td>
                                 </tr>
                                 <tr>
+                                    <td>이름</td>
+                                    <td><input type="text" class="form-control" id="name" name="name"></td>
+                                </tr>
+                                <tr>
                                     <td>부서명</td>
                                     <td>
                                         <select class="form-control" id="dept" name="dept">
-                                            ${depts}
+                                            ${options}
                                         </select>
                                     </td>
                                 </tr>

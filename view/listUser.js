@@ -1,14 +1,14 @@
-module.exports.listUser = function(rows) {
+module.exports.listUser = function(userObj) {
     let users = '';
-    for (row of rows) {
+    for (user of userObj) {
         users += `
             <tr>
-                <td>${row.uid}</td>
-                <td><a href="${row.name}.html">${row.name}</a></td>
-                <td>${row.deptName}</td><td>${row.tel}</td><td>${row.ts}</td>
-                <td><a href="/user/update/uid/${row.uid}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
-                    <a href="/user/password/uid/${row.uid}"><i class="fas fa-key"></i>&nbsp;&nbsp;
-                    <a href="/user/delete/uid/${row.uid}"><i class="fas fa-trash-alt"></i></td>
+                <td>${user.uid}</td>
+                <td><a href="${user.name}.html">${user.name}</a></td>
+                <td>${user.deptName}</td><td>${user.tel}</td><td>${user.ts}</td>
+                <td><a href="/user/update/uid/${user.uid}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
+                    <a href="/user/password/uid/${user.uid}"><i class="fas fa-key"></i>&nbsp;&nbsp;
+                    <a href="/user/delete/uid/${user.uid}"><i class="fas fa-trash-alt"></i></td>
             </tr>`;
     }
     return `

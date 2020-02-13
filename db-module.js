@@ -39,6 +39,20 @@ module.exports = {
         });
         db.close();
     },
+    getUserInfo: function(uid, callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `SELECT l.uid, l.name, r.name deptName, l.tel, strftime('%Y-%m-%d', regDate, 'localtime') ts FROM user l join dept r on l.deptId = r.did where uid=?`;
+        let stmt = db.prepare(sql);
+        stmt.get(uid, function(err, row) {
+            if (err) {
+                console.error('getUserInfo DB 오류', err);
+                return;
+            }
+            callback(row);
+        });
+        stmt.finalize();
+        db.close();
+    },
     registerUser: function(uid, password, name, deptId, tel, callback) {
         let db = new sqlite3.Database("db/smartfarm.db");
         let sql = `INSERT INTO user(uid, password, name, deptId, tel) values (?,?,?,?,?)`;
