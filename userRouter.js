@@ -30,12 +30,15 @@ router.post('/register', function(req, res) {
     dbModule.getUserInfo(uid, function(row) {
         //console.log(row);
         if (row === undefined) {
-            if (pswd === pswd2) {
+            if (pswd.length < 4) {
+                let html = alert.alertMsg('패스워드 길이가 너무 작습니다.', '/user/register');
+                res.send(html);
+            } else if (pswd === pswd2) {
                 dbModule.registerUser(uid, pswd, name, deptId, tel, function() {
                     res.redirect('/user/list');
                 });
             } else {
-                let html = alert.alertMsg(`패스워드가 일치하지 않습니다.`, '/user/register');
+                let html = alert.alertMsg('패스워드가 일치하지 않습니다.', '/user/register');
                 res.send(html);
             }
         } else {
@@ -45,7 +48,24 @@ router.post('/register', function(req, res) {
     });
 });
 router.get('/update/uid/:uid', function(req, res) {
-    res.send('update');
+    let uid = req.params.uid;
+    dbModule.getAllDepts(function(depts) {
+        dbModule.getUserInfo(uid, function(user) {
+            console.log(user);
+            let view = require('./view/updateUser');
+            let html = view.updateUser(depts, user);  // depts, user
+            res.send(html);
+        });
+    });
+});
+router.post('/update', function(req, res) {
+    let uid = req.body.uid;
+    let name = req.body.name;
+    let deptId = parseInt(req.body.dept);
+    let tel = req.body.tel;
+    dbModule.updateUser(uid, name, deptId, tel, function() {
+        res.redirect('/user/list');
+    });
 });
 router.get('/password/uid/:uid', function(req, res) {
     res.send('password');

@@ -41,7 +41,8 @@ module.exports = {
     },
     getUserInfo: function(uid, callback) {
         let db = new sqlite3.Database("db/smartfarm.db");
-        let sql = `SELECT l.uid, l.name, r.name deptName, l.tel, strftime('%Y-%m-%d', regDate, 'localtime') ts FROM user l join dept r on l.deptId = r.did where uid=?`;
+        //let sql = `SELECT l.uid, l.name, r.name deptName, l.tel, strftime('%Y-%m-%d', regDate, 'localtime') ts FROM user l join dept r on l.deptId = r.did where uid=?`;
+        let sql = `SELECT * FROM user WHERE uid=?`;
         let stmt = db.prepare(sql);
         stmt.get(uid, function(err, row) {
             if (err) {
@@ -57,9 +58,23 @@ module.exports = {
         let db = new sqlite3.Database("db/smartfarm.db");
         let sql = `INSERT INTO user(uid, password, name, deptId, tel) values (?,?,?,?,?)`;
         let stmt = db.prepare(sql);
-        stmt.run(uid, password, name, deptId, tel, function(err, row) {
+        stmt.run(uid, password, name, deptId, tel, function(err) {
             if (err) {
                 console.error('registerUser DB 오류', err);
+                return;
+            }
+            callback();
+        });
+        stmt.finalize();
+        db.close();
+    },
+    updateUser: function(uid, name, deptId, tel, callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `UPDATE user SET name=?, deptId=?, tel=? WHERE uid=?`;
+        let stmt = db.prepare(sql);
+        stmt.run(name, deptId, tel, uid, function(err) {
+            if (err) {
+                console.error('updateUser DB 오류', err);
                 return;
             }
             callback();
