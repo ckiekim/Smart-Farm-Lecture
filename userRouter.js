@@ -71,7 +71,16 @@ router.get('/password/uid/:uid', function(req, res) {
     res.send('password');
 });
 router.get('/delete/uid/:uid', function(req, res) {
-    res.send('delete');
+    let uid = req.params.uid;
+    let view = require('./view/deleteUser');
+    let html = view.deleteUser(uid);  
+    res.send(html);
+});
+router.post('/delete', function(req, res) {
+    let uid = req.body.uid;
+    dbModule.deleteUser(uid, function() {
+        res.redirect('/user/list');
+    });
 });
 
 module.exports = router;

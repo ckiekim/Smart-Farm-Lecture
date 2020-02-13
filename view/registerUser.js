@@ -20,7 +20,7 @@ module.exports.registerUser = function(deptObj) {
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <img src="greenlogo.png" class="d-inline-block align-top" alt="">&nbsp;&nbsp;&nbsp;
+            <img src="/greenlogo.png" class="d-inline-block align-top" alt="">&nbsp;&nbsp;&nbsp;
             <ul class="nav nav-pills mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>

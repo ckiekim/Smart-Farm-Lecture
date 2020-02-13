@@ -7,10 +7,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 const userRouter = require('./userRouter');
 
 app.use('/user', userRouter);
-app.use(express.static('public'));
-app.use(favicon('favicon.ico'));
+app.use(express.static(__dirname + '/public'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
-app.get('/', function(req, res) {
+app.get('/home', function(req, res) {
     res.send('app.js');
 });
 app.get('/index', function(req, res) {

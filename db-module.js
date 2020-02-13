@@ -81,5 +81,19 @@ module.exports = {
         });
         stmt.finalize();
         db.close();
+    },
+    deleteUser: function(uid, callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `DELETE FROM user WHERE uid=?`;
+        let stmt = db.prepare(sql);
+        stmt.run(uid, function(err) {
+            if (err) {
+                console.error('deleteUser DB 오류', err);
+                return;
+            }
+            callback();
+        });
+        stmt.finalize();
+        db.close();
     }
 }

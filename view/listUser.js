@@ -4,7 +4,7 @@ module.exports.listUser = function(userObj) {
         users += `
             <tr>
                 <td>${user.uid}</td>
-                <td><a href="${user.name}.html">${user.name}</a></td>
+                <td><a href="/user/${user.name}.html">${user.name}</a></td>
                 <td>${user.deptName}</td><td>${user.tel}</td><td>${user.ts}</td>
                 <td><a href="/user/update/uid/${user.uid}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
                     <a href="/user/password/uid/${user.uid}"><i class="fas fa-key"></i>&nbsp;&nbsp;
@@ -28,7 +28,7 @@ module.exports.listUser = function(userObj) {
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <img src="greenlogo.png" class="d-inline-block align-top" alt="">&nbsp;&nbsp;&nbsp;
+            <img src="/greenlogo.png" class="d-inline-block align-top" alt="">&nbsp;&nbsp;&nbsp;
             <ul class="nav nav-pills mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
