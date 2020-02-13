@@ -1,21 +1,21 @@
-module.exports.userList = function(rows) {
+module.exports.listUser = function(rows) {
     let users = '';
     for (row of rows) {
-        users += `<tr>
-                    <td>${row.uid}</td>
-                    <td><a href="${row.name}.html">${row.name}</a></td>
-                    <td>${row.deptName}</td><td>${row.tel}</td><td>${row.ts}</td>
-                    <td><a href="/user/update/uid/${row.uid}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
-                        <a href="/user/password/uid/${row.uid}"><i class="fas fa-key"></i>&nbsp;&nbsp;
-                        <a href="/user/delete/uid/${row.uid}"><i class="fas fa-trash-alt"></i></td>
-                  </tr>`;
+        users += `
+            <tr>
+                <td>${row.uid}</td>
+                <td><a href="${row.name}.html">${row.name}</a></td>
+                <td>${row.deptName}</td><td>${row.tel}</td><td>${row.ts}</td>
+                <td><a href="/user/update/uid/${row.uid}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
+                    <a href="/user/password/uid/${row.uid}"><i class="fas fa-key"></i>&nbsp;&nbsp;
+                    <a href="/user/delete/uid/${row.uid}"><i class="fas fa-trash-alt"></i></td>
+            </tr>`;
     }
     return `
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-    <title>Bootstrap Example</title>
+    <title>강남 스마트팜</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -25,7 +25,6 @@ module.exports.userList = function(rows) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
-
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">

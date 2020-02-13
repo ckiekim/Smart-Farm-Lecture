@@ -5,14 +5,19 @@ const router = express.Router();
 
 router.get('/list', function(req, res) {
     dbModule.getAllUsers(function(rows) {
-        let view = require('./view/userList');
-        let html = view.userList(rows);
+        let view = require('./view/listUser');
+        let html = view.listUser(rows);
         //console.log(rows);
         res.send(html);
     });
 });
 router.get('/register', function(req, res) {
-    res.send('register');
+    dbModule.getAllDepts(function(rows) {
+        let view = require('./view/registerUser');
+        let html = view.registerUser(rows);
+        //console.log(rows);
+        res.send(html);
+    });
 });
 router.get('/update/uid/:uid', function(req, res) {
     res.send('update');
