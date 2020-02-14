@@ -5,7 +5,7 @@ const template = require('./view/template');
 
 const router = express.Router();
 router.get('/list', function(req, res) {
-    let navBar = template.navBar();
+    let navBar = template.navBar(req.session.userName);
     dbModule.getAllUsers(function(rows) {
         let view = require('./view/listUser');
         let html = view.listUser(navBar, rows);
@@ -14,7 +14,7 @@ router.get('/list', function(req, res) {
     });
 });
 router.get('/register', function(req, res) {
-    let navBar = template.navBar();
+    let navBar = template.navBar(req.session.userName);
     dbModule.getAllDepts(function(rows) {
         let view = require('./view/registerUser');
         let html = view.registerUser(navBar, rows);
@@ -52,7 +52,7 @@ router.post('/register', function(req, res) {
 });
 router.get('/update/uid/:uid', function(req, res) {
     let uid = req.params.uid;
-    let navBar = template.navBar();
+    let navBar = template.navBar(req.session.userName);
     dbModule.getAllDepts(function(depts) {
         dbModule.getUserInfo(uid, function(user) {
             //console.log(user);
@@ -76,7 +76,7 @@ router.get('/password/uid/:uid', function(req, res) {
 });
 router.get('/delete/uid/:uid', function(req, res) {
     let uid = req.params.uid;
-    let navBar = template.navBar();
+    let navBar = template.navBar(req.session.userName);
     let view = require('./view/deleteUser');
     let html = view.deleteUser(navBar, uid);  
     res.send(html);

@@ -1,4 +1,4 @@
-module.exports.home = function() {
+module.exports.home = function(navBar) {
     let temp = 20;
     let humid = 30;
     let cds = 98;
@@ -28,6 +28,7 @@ module.exports.home = function() {
 </head>
 <body>
 <div class="container">
+    ${navBar}
 	<div class="row" style="margin-top: 30px">
         <div class="col-2">
             <ul class="nav nav-pills flex-column">
