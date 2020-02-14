@@ -1,20 +1,23 @@
 const express = require('express');
 const dbModule = require('./db-module');
 const alert = require('./view/alertMsg');
+const template = require('./view/template');
 
 const router = express.Router();
 router.get('/list', function(req, res) {
+    let navBar = template.navBar();
     dbModule.getAllUsers(function(rows) {
         let view = require('./view/listUser');
-        let html = view.listUser(rows);
+        let html = view.listUser(navBar, rows);
         //console.log(rows);
         res.send(html);
     });
 });
 router.get('/register', function(req, res) {
+    let navBar = template.navBar();
     dbModule.getAllDepts(function(rows) {
         let view = require('./view/registerUser');
-        let html = view.registerUser(rows);
+        let html = view.registerUser(navBar, rows);
         //console.log(rows);
         res.send(html);
     });
@@ -49,11 +52,12 @@ router.post('/register', function(req, res) {
 });
 router.get('/update/uid/:uid', function(req, res) {
     let uid = req.params.uid;
+    let navBar = template.navBar();
     dbModule.getAllDepts(function(depts) {
         dbModule.getUserInfo(uid, function(user) {
             //console.log(user);
             let view = require('./view/updateUser');
-            let html = view.updateUser(depts, user);  // depts, user
+            let html = view.updateUser(navBar, depts, user);  // depts, user
             res.send(html);
         });
     });
@@ -72,8 +76,9 @@ router.get('/password/uid/:uid', function(req, res) {
 });
 router.get('/delete/uid/:uid', function(req, res) {
     let uid = req.params.uid;
+    let navBar = template.navBar();
     let view = require('./view/deleteUser');
-    let html = view.deleteUser(uid);  
+    let html = view.deleteUser(navBar, uid);  
     res.send(html);
 });
 router.post('/delete', function(req, res) {
@@ -81,6 +86,30 @@ router.post('/delete', function(req, res) {
     dbModule.deleteUser(uid, function() {
         res.redirect('/user/list');
     });
+});
+router.post('/login', function(req, res) {
+    let uid = req.body.uid;
+    let pswd = req.body.pswd;
+    dbModule.getUserInfo(uid, function(user) {
+        //console.log(user);
+        if (user === undefined) {
+            let html = alert.alertMsg('아이디가 없습니다.', '/');
+            res.send(html);
+        } else if (pswd !== user.password) {
+            let html = alert.alertMsg('패스워드가 일치하지 않습니다.', '/');
+            res.send(html);
+        } else {                // Login 성공
+            console.log(`${uid} login 성공`);
+            req.session.userId = uid;
+            req.session.userName = user.name;
+            let html = alert.alertMsg(`${user.name} 님 환영합니다.`, '/user/list');
+            res.send(html);
+        }
+    });
+});
+router.get('/logout', function(req, res) {
+    req.session.destroy();
+    res.redirect('/');    
 });
 
 module.exports = router;

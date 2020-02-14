@@ -1,4 +1,4 @@
-module.exports.registerUser = function(deptObj) {
+module.exports.registerUser = function(navBar, deptObj) {
     let options = '';
     for (deptItem of deptObj) {
         options += `<option value="${deptItem.did}">${deptItem.name}</option>`;
@@ -19,24 +19,7 @@ module.exports.registerUser = function(deptObj) {
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <img src="/greenlogo.png" class="d-inline-block align-top" alt="">&nbsp;&nbsp;&nbsp;
-            <ul class="nav nav-pills mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">로그아웃</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"> </a>
-                </li>
-            </ul>
-            <div class="navbar-text">
-                <p>날씨</p>
-                <p>관리자님 환영합니다.</p>
-            </div>
-        </nav>
+        ${navBar}
         <div class="row" style="margin-top: 30px">
             <div class="col-2">
                 <ul class="nav nav-pills flex-column">
