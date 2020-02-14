@@ -78,4 +78,3 @@ module.exports.deleteUser = function(uid) {
 </html>
     `;
 }
-//<img src="greenlogo.png" class="d-inline-block align-top" alt="">&nbsp;&nbsp;&nbsp;

@@ -51,7 +51,7 @@ router.get('/update/uid/:uid', function(req, res) {
     let uid = req.params.uid;
     dbModule.getAllDepts(function(depts) {
         dbModule.getUserInfo(uid, function(user) {
-            console.log(user);
+            //console.log(user);
             let view = require('./view/updateUser');
             let html = view.updateUser(depts, user);  // depts, user
             res.send(html);
