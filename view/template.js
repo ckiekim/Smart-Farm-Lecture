@@ -1,5 +1,5 @@
 module.exports = {
-    navBar: function(isHome, userName) {
+    navBar: function(isHome, weather, userName) {
         let homeLink = isHome ? `<a class="nav-link active" href="#">Home</a>`: `<a class="nav-link" href="/home">Home</a>`;
         return `
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -16,7 +16,7 @@ module.exports = {
                     </li>
                 </ul>
                 <div class="navbar-text">
-                    <p>날씨</p>
+                    <p>${weather}</p>
                     <p>${userName}님 환영합니다.</p>
                 </div>
             </nav>
@@ -60,6 +60,13 @@ module.exports = {
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"></a>
                 </li>
             </ul>
+        `;
+    },
+    weather: function(temp, humid, ico) {
+        return `
+            <a href='/weather'><button type="button" class="btn btn-secondary btn-sm">날씨</button></a>&nbsp;
+            <img src="${ico}" width="32" height="32">&nbsp;
+            기온: ${temp}&#8451;, 습도: ${humid}% &nbsp;&nbsp;&nbsp;
         `;
     }
 }

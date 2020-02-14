@@ -2,6 +2,7 @@ const express = require('express');
 const dbModule = require('./db-module');
 const alert = require('./view/alertMsg');
 const template = require('./view/template');
+const wm = require('./weather-module');
 
 const router = express.Router();
 router.get('/list', function(req, res) {        // 로그인만 하면 누구나 할 수 있음.
@@ -9,13 +10,15 @@ router.get('/list', function(req, res) {        // 로그인만 하면 누구나
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
     } else {
-        let navBar = template.navBar(false, req.session.userName);
-        let menuLink = template.menuLink(3);
-        dbModule.getAllUsers(function(rows) {
-            let view = require('./view/listUser');
-            let html = view.listUser(navBar, menuLink, rows);
-            //console.log(rows);
-            res.send(html);
+        wm.getWeather(function(weather) {
+            let navBar = template.navBar(false, weather, req.session.userName);
+            let menuLink = template.menuLink(3);
+            dbModule.getAllUsers(function(rows) {
+                let view = require('./view/listUser');
+                let html = view.listUser(navBar, menuLink, rows);
+                //console.log(rows);
+                res.send(html);
+            });
         });
     }
 });
@@ -27,13 +30,15 @@ router.get('/register', function(req, res) {    // 관리자로 로그인해야 
         let html = alert.alertMsg(`사용자를 등록할 권한이 없습니다.`, '/user/list');
         res.send(html);
     } else {
-        let navBar = template.navBar(false, req.session.userName);
-        let menuLink = template.menuLink(3);
-        dbModule.getAllDepts(function(rows) {
-            let view = require('./view/registerUser');
-            let html = view.registerUser(navBar, menuLink, rows);
-            //console.log(rows);
-            res.send(html);
+        wm.getWeather(function(weather) {
+            let navBar = template.navBar(false, weather, req.session.userName);
+            let menuLink = template.menuLink(3);
+            dbModule.getAllDepts(function(rows) {
+                let view = require('./view/registerUser');
+                let html = view.registerUser(navBar, menuLink, rows);
+                //console.log(rows);
+                res.send(html);
+            });
         });
     }
 });
@@ -74,14 +79,16 @@ router.get('/update/uid/:uid', function(req, res) {     // 본인 것만 수정�
         let html = alert.alertMsg(`본인 것만 수정할 수 있습니다.`, '/user/list');
         res.send(html);
     } else {
-        let navBar = template.navBar(false, req.session.userName);
-        let menuLink = template.menuLink(3);
-        dbModule.getAllDepts(function(depts) {
-            dbModule.getUserInfo(uid, function(user) {
-                //console.log(user);
-                let view = require('./view/updateUser');
-                let html = view.updateUser(navBar, menuLink, depts, user);
-                res.send(html);
+        wm.getWeather(function(weather) {
+            let navBar = template.navBar(false, weather, req.session.userName);
+            let menuLink = template.menuLink(3);
+            dbModule.getAllDepts(function(depts) {
+                dbModule.getUserInfo(uid, function(user) {
+                    //console.log(user);
+                    let view = require('./view/updateUser');
+                    let html = view.updateUser(navBar, menuLink, depts, user);
+                    res.send(html);
+                });
             });
         });
     }
@@ -104,11 +111,13 @@ router.get('/delete/uid/:uid', function(req, res) {     // 관리자로 로그�
         res.send(html);
     } else {
         let uid = req.params.uid;
-        let navBar = template.navBar(false, req.session.userName);
-        let menuLink = template.menuLink(3);
-        let view = require('./view/deleteUser');
-        let html = view.deleteUser(navBar, menuLink, uid);  
-        res.send(html);
+        wm.getWeather(function(weather) {
+            let navBar = template.navBar(false, weather, req.session.userName);
+            let menuLink = template.menuLink(3);
+            let view = require('./view/deleteUser');
+            let html = view.deleteUser(navBar, menuLink, uid);  
+            res.send(html);
+        });
     }
 });
 router.post('/delete', function(req, res) {
@@ -132,7 +141,7 @@ router.post('/login', function(req, res) {
             console.log(`${uid} login 성공`);
             req.session.userId = uid;
             req.session.userName = user.name;
-            let html = alert.alertMsg(`${user.name} 님 환영합니다.`, '/user/list');
+            let html = alert.alertMsg(`${user.name} 님 환영합니다.`, '/home');
             res.send(html);
         }
     });
