@@ -4,23 +4,36 @@ const alert = require('./view/alertMsg');
 const template = require('./view/template');
 
 const router = express.Router();
-router.get('/list', function(req, res) {
-    let navBar = template.navBar(req.session.userName);
-    dbModule.getAllUsers(function(rows) {
-        let view = require('./view/listUser');
-        let html = view.listUser(navBar, rows);
-        //console.log(rows);
+router.get('/list', function(req, res) {        // 로그인만 하면 누구나 할 수 있음.
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
-    });
+    } else {
+        let navBar = template.navBar(req.session.userName);
+        dbModule.getAllUsers(function(rows) {
+            let view = require('./view/listUser');
+            let html = view.listUser(navBar, rows);
+            //console.log(rows);
+            res.send(html);
+        });
+    }
 });
-router.get('/register', function(req, res) {
-    let navBar = template.navBar(req.session.userName);
-    dbModule.getAllDepts(function(rows) {
-        let view = require('./view/registerUser');
-        let html = view.registerUser(navBar, rows);
-        //console.log(rows);
+router.get('/register', function(req, res) {    // 관리자로 로그인해야 할 수 있음.
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
-    });
+    } else if (req.session.uid != 'admin') {
+        let html = alert.alertMsg(`사용자를 등록할 권한이 없습니다.`, '/user/list');
+        res.send(html);
+    } else {
+        let navBar = template.navBar(req.session.userName);
+        dbModule.getAllDepts(function(rows) {
+            let view = require('./view/registerUser');
+            let html = view.registerUser(navBar, rows);
+            //console.log(rows);
+            res.send(html);
+        });
+    }
 });
 router.post('/register', function(req, res) {
     let uid = req.body.uid;
@@ -50,17 +63,25 @@ router.post('/register', function(req, res) {
         }
     });
 });
-router.get('/update/uid/:uid', function(req, res) {
+router.get('/update/uid/:uid', function(req, res) {     // 본인 것만 수정할 수 있음.
     let uid = req.params.uid;
-    let navBar = template.navBar(req.session.userName);
-    dbModule.getAllDepts(function(depts) {
-        dbModule.getUserInfo(uid, function(user) {
-            //console.log(user);
-            let view = require('./view/updateUser');
-            let html = view.updateUser(navBar, depts, user);  // depts, user
-            res.send(html);
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
+        res.send(html);
+    } else if (uid !== req.session.userId) {
+        let html = alert.alertMsg(`본인 것만 수정할 수 있습니다.`, '/user/list');
+        res.send(html);
+    } else {
+        let navBar = template.navBar(req.session.userName);
+        dbModule.getAllDepts(function(depts) {
+            dbModule.getUserInfo(uid, function(user) {
+                //console.log(user);
+                let view = require('./view/updateUser');
+                let html = view.updateUser(navBar, depts, user);  // depts, user
+                res.send(html);
+            });
         });
-    });
+    }
 });
 router.post('/update', function(req, res) {
     let uid = req.body.uid;
@@ -74,12 +95,20 @@ router.post('/update', function(req, res) {
 router.get('/password/uid/:uid', function(req, res) {
     res.send('password');
 });
-router.get('/delete/uid/:uid', function(req, res) {
-    let uid = req.params.uid;
-    let navBar = template.navBar(req.session.userName);
-    let view = require('./view/deleteUser');
-    let html = view.deleteUser(navBar, uid);  
-    res.send(html);
+router.get('/delete/uid/:uid', function(req, res) {     // 관리자로 로그인해야 할 수 있음.
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
+        res.send(html);
+    } else if (req.session.uid != 'admin') {
+        let html = alert.alertMsg(`사용자를 삭제할 권한이 없습니다.`, '/user/list');
+        res.send(html);
+    } else {
+        let uid = req.params.uid;
+        let navBar = template.navBar(req.session.userName);
+        let view = require('./view/deleteUser');
+        let html = view.deleteUser(navBar, uid);  
+        res.send(html);
+    }
 });
 router.post('/delete', function(req, res) {
     let uid = req.body.uid;
