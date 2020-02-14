@@ -9,10 +9,11 @@ router.get('/list', function(req, res) {        // 로그인만 하면 누구나
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
     } else {
-        let navBar = template.navBar(req.session.userName);
+        let navBar = template.navBar(false, req.session.userName);
+        let menuLink = template.menuLink(3);
         dbModule.getAllUsers(function(rows) {
             let view = require('./view/listUser');
-            let html = view.listUser(navBar, rows);
+            let html = view.listUser(navBar, menuLink, rows);
             //console.log(rows);
             res.send(html);
         });
@@ -22,14 +23,15 @@ router.get('/register', function(req, res) {    // 관리자로 로그인해야 
     if (req.session.userId === undefined) {
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
-    } else if (req.session.uid != 'admin') {
+    } else if (req.session.userId != 'admin') {
         let html = alert.alertMsg(`사용자를 등록할 권한이 없습니다.`, '/user/list');
         res.send(html);
     } else {
-        let navBar = template.navBar(req.session.userName);
+        let navBar = template.navBar(false, req.session.userName);
+        let menuLink = template.menuLink(3);
         dbModule.getAllDepts(function(rows) {
             let view = require('./view/registerUser');
-            let html = view.registerUser(navBar, rows);
+            let html = view.registerUser(navBar, menuLink, rows);
             //console.log(rows);
             res.send(html);
         });
@@ -72,12 +74,13 @@ router.get('/update/uid/:uid', function(req, res) {     // 본인 것만 수정�
         let html = alert.alertMsg(`본인 것만 수정할 수 있습니다.`, '/user/list');
         res.send(html);
     } else {
-        let navBar = template.navBar(req.session.userName);
+        let navBar = template.navBar(false, req.session.userName);
+        let menuLink = template.menuLink(3);
         dbModule.getAllDepts(function(depts) {
             dbModule.getUserInfo(uid, function(user) {
                 //console.log(user);
                 let view = require('./view/updateUser');
-                let html = view.updateUser(navBar, depts, user);  // depts, user
+                let html = view.updateUser(navBar, menuLink, depts, user);
                 res.send(html);
             });
         });
@@ -92,21 +95,19 @@ router.post('/update', function(req, res) {
         res.redirect('/user/list');
     });
 });
-router.get('/password/uid/:uid', function(req, res) {
-    res.send('password');
-});
 router.get('/delete/uid/:uid', function(req, res) {     // 관리자로 로그인해야 할 수 있음.
     if (req.session.userId === undefined) {
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
-    } else if (req.session.uid != 'admin') {
+    } else if (req.session.userId !== 'admin') {
         let html = alert.alertMsg(`사용자를 삭제할 권한이 없습니다.`, '/user/list');
         res.send(html);
     } else {
         let uid = req.params.uid;
-        let navBar = template.navBar(req.session.userName);
+        let navBar = template.navBar(false, req.session.userName);
+        let menuLink = template.menuLink(3);
         let view = require('./view/deleteUser');
-        let html = view.deleteUser(navBar, uid);  
+        let html = view.deleteUser(navBar, menuLink, uid);  
         res.send(html);
     }
 });

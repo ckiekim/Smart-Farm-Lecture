@@ -1,4 +1,4 @@
-module.exports.listUser = function(navBar, userObj) {
+module.exports.listUser = function(navBar, menuLink, userObj) {
     let users = '';
     for (user of userObj) {
         users += `
@@ -7,7 +7,6 @@ module.exports.listUser = function(navBar, userObj) {
                 <td><a href="/user/${user.name}.html">${user.name}</a></td>
                 <td>${user.deptName}</td><td>${user.tel}</td><td>${user.ts}</td>
                 <td><a href="/user/update/uid/${user.uid}"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
-                    <a href="/user/password/uid/${user.uid}"><i class="fas fa-key"></i>&nbsp;&nbsp;
                     <a href="/user/delete/uid/${user.uid}"><i class="fas fa-trash-alt"></i></td>
             </tr>`;
     }
@@ -30,26 +29,7 @@ module.exports.listUser = function(navBar, userObj) {
         ${navBar}
         <div class="row" style="margin-top: 30px">
             <div class="col-2">
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/sensor">센서</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/actuator">액츄에이터</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            사용자
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/user/register">등록(C)</a>
-                            <a class="dropdown-item" href="#">조회(R)</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"></a>
-                    </li>
-                </ul>
+                ${menuLink}
             </div>
             <div class="col-10">
                 <div class="row" style="margin-left: 10px">

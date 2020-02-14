@@ -21,9 +21,10 @@ app.use(session({
 app.use('/user', userRouter);
 
 app.get('/home', function(req, res) {
-    let navBar = template.navBar(req.session.userName);
+    let navBar = template.navBar(true, req.session.userName);
+    let menuLink = template.menuLink(0);
     let view = require('./view/home');
-    let html = view.home(navBar);
+    let html = view.home(navBar, menuLink);
     res.send(html);
 });
 app.get('/index', function(req, res) {
