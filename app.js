@@ -22,16 +22,37 @@ app.use(session({
 app.use('/user', userRouter);
 
 app.get('/home', function(req, res) {
-    wm.getWeather(function(weather) {
-        let navBar = template.navBar(true, weather, req.session.userName);
-        let menuLink = template.menuLink(0);
-        let view = require('./view/home');
-        let html = view.home(navBar, menuLink);
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg('시스템을 사용하려면 먼저 로그인하세요.', '/');
         res.send(html);
-    });
+    } else {
+        wm.getWeather(function(weather) {
+            let navBar = template.navBar(true, weather, req.session.userName);
+            let menuLink = template.menuLink(0);
+            let view = require('./view/home');
+            let html = view.home(navBar, menuLink);
+            res.send(html);
+        });
+    }
 });
 app.get('/index', function(req, res) {
     res.redirect('/');
+});
+app.get('/weather', function(req, res) {
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg('시스템을 사용하려면 먼저 로그인하세요.', '/');
+        res.send(html);
+    } else {
+        let view = require('./view/weather');
+        wm.getWeather(function(weather) {
+            let navBar = template.navBar(false, weather, req.session.userName);
+            let menuLink = template.menuLink(0);
+            wm.weatherObj(function(result) {
+                let html = view.weather(navBar, menuLink, result);
+                res.send(html);
+            });
+        });
+    }
 });
 
 app.get('*', function(req, res) {
