@@ -56,7 +56,7 @@ void loop() {
       doParseJson(jsonStr);
     }
   }
-  delay(10000);
+  delay(1000);
 }
 
 void readSensors() {
