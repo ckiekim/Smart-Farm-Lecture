@@ -95,5 +95,29 @@ module.exports = {
         });
         stmt.finalize();
         db.close();
+    },
+    getCurrentSensor: function(callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `SELECT temperature, humidity, cds, distance, strftime('%Y-%m-%d %H:%M:%S', sensingTime, 'localtime') sTime, uid FROM sensor ORDER BY sid DESC LIMIT 1`;
+        db.each(sql, function(err, row) {
+            if (err) {
+                console.error('getCurrentSensor DB 오류', err);
+                return;
+            }
+            callback(row);
+        });
+        db.close();
+    },
+    getCurrentActuator: function(callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `SELECT redLED, greenLED, blueLED, relay, strftime('%Y-%m-%d %H:%M:%S', actionTime, 'localtime') aTime, reason, uid FROM actuator ORDER BY aid DESC LIMIT 1`;
+        db.each(sql, function(err, row) {
+            if (err) {
+                console.error('getCurrentActuator DB 오류', err);
+                return;
+            }
+            callback(row);
+        });
+        db.close();
     }
 }

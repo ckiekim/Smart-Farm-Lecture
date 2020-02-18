@@ -6,6 +6,7 @@ const FileStore = require('session-file-store')(session);
 const alert = require('./view/alertMsg');
 const template = require('./view/template');
 const wm = require('./weather-module');
+const dbModule = require('./db-module');
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -26,12 +27,16 @@ app.get('/home', function(req, res) {
         let html = alert.alertMsg('시스템을 사용하려면 먼저 로그인하세요.', '/');
         res.send(html);
     } else {
-        wm.getWeather(function(weather) {
-            let navBar = template.navBar(true, weather, req.session.userName);
-            let menuLink = template.menuLink(0);
-            let view = require('./view/home');
-            let html = view.home(navBar, menuLink);
-            res.send(html);
+        dbModule.getCurrentSensor(function(sensor) {
+            dbModule.getCurrentActuator(function(actuator) {
+                wm.getWeather(function(weather) {
+                    let navBar = template.navBar(true, weather, req.session.userName);
+                    let menuLink = template.menuLink(0);
+                    let view = require('./view/home');
+                    let html = view.home(navBar, menuLink, sensor, actuator);
+                    res.send(html);
+                });
+            });
         });
     }
 });

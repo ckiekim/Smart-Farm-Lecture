@@ -1,16 +1,17 @@
-module.exports.home = function(navBar, menuLink) {
-    let temp = 20;
-    let humid = 30;
-    let cds = 98;
-    let dist = 10.5;
-    let sTime = "2020-02-14 09:50:23";
-    let sUid = 'admin';
-    let red = 100;
-    let green = 120;
-    let blue = 200;
-    let relay = 1;
-    let aTime = "2020-02-14 09:51:23";
-    let aUid = 'admin';
+module.exports.home = function(navBar, menuLink, sensor, actuator) {
+    let temp = sensor.temperature;
+    let humid = sensor.humidity;
+    let cds = sensor.cds;
+    let dist = sensor.distance;
+    let sTime = sensor.sTime;
+    let sUid = sensor.uid;
+    let red = actuator.redLED;
+    let green = actuator.greenLED;
+    let blue = actuator.blueLED;
+    let relay = actuator.relay;
+    let aTime = actuator.aTime;
+    let reason = actuator.reason;
+    let aUid = actuator.uid;
     return `
 <html>
 <head>
@@ -84,9 +85,11 @@ module.exports.home = function(navBar, menuLink) {
                                 </div></td>
                             <td>${sUid}</td>
                         </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: right;">최종 측정시각: ${sTime}</td>
+                        </tr>
                         </tbody>
                     </table>
-                    <p style="text-align: right;">최종 측정시각: ${sTime}</p>
                 </div>
                 <div class="col-1"></div><br>
                 <div class="col-11">
@@ -132,9 +135,12 @@ module.exports.home = function(navBar, menuLink) {
                                 </div></td>
                             <td>${aUid}</td>
                         </tr>
+                        <tr>
+                            <td colspan="2">조작 사유: ${reason}</td>
+                            <td colspan="2" style="text-align: right;">최종 조작시각: ${aTime}</td>
+                        </tr>
                         </tbody>
                     </table>
-                    <p style="text-align: right;">최종 조작시각: ${aTime}</p>
                 </div>
                 <div class="col-1"></div><br>
                 </div>
@@ -145,3 +151,4 @@ module.exports.home = function(navBar, menuLink) {
 </html>
     `;
 }
+//navBar, menuLink, temp, humid, cds, dist, sTime, sUid, red, green, blue, relay, aTime, reason, aUid
