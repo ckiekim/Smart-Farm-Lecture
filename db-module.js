@@ -108,6 +108,20 @@ module.exports = {
         });
         db.close();
     },
+    insertSensor: function(temp, humid, cds, dist, uid, callback) {
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `INSERT INTO sensor(temperature, humidity, cds, distance, uid) values (?,?,?,?,?)`;
+        let stmt = db.prepare(sql);
+        stmt.run(temp, humid, cds, dist, uid, function(err) {
+            if (err) {
+                console.error('insertSensor DB 오류', err);
+                return;
+            }
+            callback();
+        });
+        stmt.finalize();
+        db.close();
+    },
     getCurrentActuator: function(callback) {
         let db = new sqlite3.Database("db/smartfarm.db");
         let sql = `SELECT redLED, greenLED, blueLED, relay, strftime('%Y-%m-%d %H:%M:%S', actionTime, 'localtime') aTime, reason, uid FROM actuator ORDER BY aid DESC LIMIT 1`;
