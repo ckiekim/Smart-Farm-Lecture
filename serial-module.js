@@ -1,7 +1,8 @@
+const SerialPort = require("serialport");
+const Readline = require('@serialport/parser-readline');
+
 module.exports = {
     readSensor: function(callback) {
-        const SerialPort = require("serialport");
-        const Readline = require('@serialport/parser-readline');
         const sp = new SerialPort("COM7", {     // 라즈베리파이에서는 /dev/ttyACM0
             baudRate: 115200,
             autoOpen: false
@@ -37,8 +38,6 @@ module.exports = {
         });
     },
     writeActuator: function(jsonData, callback) { 
-        const SerialPort = require("serialport");
-        const Readline = require('@serialport/parser-readline');
         const sp = new SerialPort("COM7", {     // 라즈베리파이에서는 /dev/ttyACM0
             baudRate: 115200,
             autoOpen: false
