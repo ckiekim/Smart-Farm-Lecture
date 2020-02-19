@@ -13,12 +13,12 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 const userRouter = require('./userRouter');
 
-app.use(express.static(__dirname + '/public'));
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/popper', express.static(__dirname + '/node_modules/popper.js/dist'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist')); // redirect jQuery
 app.use('/fontawesome', express.static(__dirname + '/node_modules/@fortawesome/fontawesome-free/js'));
+app.use(express.static(__dirname + '/public'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(session({
     secret: 'keyboard cat',

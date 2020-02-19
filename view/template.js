@@ -77,7 +77,7 @@ module.exports = {
             <!-- ==================================================================== -->
             <title>강남 스마트팜</title>
             <link rel="stylesheet" href="/css/bootstrap.min.css">
-            <link rel="stylesheet" href="/fontawesome/all.min.js>
+            <script src="/fontawesome/all.min.js"></script>
             <script src="/jquery/jquery.min.js"></script>
             <script src="/popper/popper.min.js"></script>
             <script src="/js/bootstrap.min.js"></script>
