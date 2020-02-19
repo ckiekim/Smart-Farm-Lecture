@@ -81,7 +81,21 @@ app.get('/actuator', function(req, res) {
             });
         });
     }
-}); 
+});
+app.post('/actuator', function(req, res) {
+    let red = parseInt(req.body.redRange);
+    let green = parseInt(req.body.greenRange);
+    let blue = parseInt(req.body.blueRange);
+    let relay = parseInt(req.body.relay);
+    let reason = req.body.reason;
+    let uid = req.session.userId;
+    // DB에 삽입
+    dbModule.insertActuator(red, green, blue, relay, reason, uid, function() {
+        // 액츄에이터 구동
+        // home 화면으로 보내기
+        res.redirect('/home');
+    });
+});
 app.get('/index', function(req, res) {
     res.redirect('/');
 });
