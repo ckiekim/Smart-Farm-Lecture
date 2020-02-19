@@ -53,26 +53,30 @@ app.get('/sensor', function(req, res) {
     } else {
         let uid = req.session.userId;
         // Arduino 측정값 구하기
-        sm.readSensor(function(sensor) {
-            let temp = sensor.temperature;
-            let humid = sensor.humidity;
-            let cds = sensor.cds;
-            let dist = sensor.distance;
-            dist = dist.toFixed(1);
-            // DB에 등록하기
-            dbModule.insertSensor(temp, humid, cds, dist, uid, function() {
-                // 화면에 보여주기
-                dbModule.getCurrentSensor(function(sensor) {
-                    wm.getWeather(function(weather) {
-                        let navBar = template.navBar(false, weather, req.session.userName);
-                        let menuLink = template.menuLink(1);
-                        let view = require('./view/sensor');
-                        let html = view.sensor(navBar, menuLink, sensor);
-                        res.send(html);
+        try {
+            sm.readSensor(function(sensor) {
+                let temp = sensor.temperature;
+                let humid = sensor.humidity;
+                let cds = sensor.cds;
+                let dist = sensor.distance;
+                dist = dist.toFixed(1);
+                // DB에 등록하기
+                dbModule.insertSensor(temp, humid, cds, dist, uid, function() {
+                    // 화면에 보여주기
+                    dbModule.getCurrentSensor(function(sensor) {
+                        wm.getWeather(function(weather) {
+                            let navBar = template.navBar(false, weather, req.session.userName);
+                            let menuLink = template.menuLink(1);
+                            let view = require('./view/sensor');
+                            let html = view.sensor(navBar, menuLink, sensor);
+                            res.send(html);
+                        });
                     });
                 });
             });
-        });
+        } catch (exception) {
+            console.log(exception);
+        }
     }
 });
 app.get('/actuator', function(req, res) {
@@ -111,8 +115,13 @@ app.post('/actuator', function(req, res) {
         // 액츄에이터 구동
         sm.writeActuator(jsonData, function() {
             // home 화면으로 보내기
-            res.redirect('/home');
+            try {
+                res.redirect('/home');
+            } catch (ex) {
+                console.log(ex);
+            }  
         });
+
     });
 });
 app.get('/index', function(req, res) {

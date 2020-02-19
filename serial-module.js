@@ -1,13 +1,13 @@
-const SerialPort = require("serialport");
-const Readline = require('@serialport/parser-readline');
-const sp = new SerialPort("COM7", {     // 라즈베리파이에서는 /dev/ttyACM0
-    baudRate: 115200,
-    autoOpen: false
-});
-const spp = sp.pipe(new Readline());	// Serial Port Parser
-
 module.exports = {
     readSensor: function(callback) {
+        const SerialPort = require("serialport");
+        const Readline = require('@serialport/parser-readline');
+        const sp = new SerialPort("COM7", {     // 라즈베리파이에서는 /dev/ttyACM0
+            baudRate: 115200,
+            autoOpen: false
+        });
+        const spp = sp.pipe(new Readline());	// Serial Port Parser
+
         var readyFlag = true;
         sp.open(function() {
             console.log('Serial Port OPEN');
@@ -30,13 +30,21 @@ module.exports = {
                     console.log(data);
                     var result = JSON.parse(data);
                     console.log(result);
-                    callback(result);         // serial-module에서 추가됨
                     sp.close();
+                    callback(result);         // serial-module에서 추가됨
                 }
             });
         });
     },
-    writeActuator: function(jsonData, callback) {        
+    writeActuator: function(jsonData, callback) { 
+        const SerialPort = require("serialport");
+        const Readline = require('@serialport/parser-readline');
+        const sp = new SerialPort("COM7", {     // 라즈베리파이에서는 /dev/ttyACM0
+            baudRate: 115200,
+            autoOpen: false
+        });
+        const spp = sp.pipe(new Readline());	// Serial Port Parser
+
         let message = `PUT ${jsonData}\n`;
         sp.open(function() {
             console.log('Serial Port OPEN');
@@ -51,8 +59,9 @@ module.exports = {
                         if (err) {
                             console.log('Write error:', err);
                         }
-                        callback();         // serial-module에서 추가됨
+                        console.log(message);
                         sp.close();
+                        callback();         // serial-module에서 추가됨
                     });
                 }
             });
