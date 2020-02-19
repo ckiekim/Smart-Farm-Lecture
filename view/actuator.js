@@ -18,7 +18,8 @@ module.exports.actuator = function(navBar, menuLink, actuator) {
         radio = `<input type="radio" name="relay" value="0">&nbsp;OFF&nbsp;&nbsp;&nbsp;&nbsp;
                  <input type="radio" name="relay" value="1" checked>&nbsp;ON<br>`;
     return `
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
 	${header}
 </head>

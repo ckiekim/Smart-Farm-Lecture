@@ -35,7 +35,8 @@ module.exports.sensor = function(navBar, menuLink, sensor) {
     else distSign = ok;
 
     return `
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
 	${header}
 </head>

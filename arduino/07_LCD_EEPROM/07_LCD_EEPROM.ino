@@ -31,10 +31,7 @@ void lcdDisplay(int, int, int, float);
 StaticJsonDocument<80> doc;
 StaticJsonDocument<80> pDoc;
 
-int red=200;
-int green=128;
-int blue=80;
-int relay=0;
+int red, green, blue, relay;
 
 void setup() {
   Serial.begin(115200);
@@ -47,11 +44,6 @@ void setup() {
   pinMode(GREEN_LED, OUTPUT);
   pinMode(BLUE_LED, OUTPUT);
   pinMode(RELAY_PIN, OUTPUT);
-  
-  EEPROM.write(RED_ADDR, red);
-  EEPROM.write(GREEN_ADDR, green);
-  EEPROM.write(BLUE_ADDR, blue);
-  EEPROM.write(RELAY_ADDR, relay);
   dht.begin();
   lcd.init();
   lcd.backlight();

@@ -16,7 +16,8 @@ module.exports.home = function(navBar, menuLink, sensor, actuator) {
     let reason = actuator.reason;
     let aUid = actuator.uid;
     return `
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
 	${header}
 </head>

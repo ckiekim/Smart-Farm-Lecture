@@ -7,12 +7,18 @@ const alert = require('./view/alertMsg');
 const template = require('./view/template');
 const wm = require('./weather-module');
 const dbModule = require('./db-module');
+const sm = require('./serial-module');
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 const userRouter = require('./userRouter');
 
 app.use(express.static(__dirname + '/public'));
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
+app.use('/popper', express.static(__dirname + '/node_modules/popper.js/dist'));
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist')); // redirect jQuery
+app.use('/fontawesome', express.static(__dirname + '/node_modules/@fortawesome/fontawesome-free/js'));
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(session({
     secret: 'keyboard cat',
@@ -47,20 +53,23 @@ app.get('/sensor', function(req, res) {
     } else {
         let uid = req.session.userId;
         // Arduino 측정값 구하기
-        let temp = 23;
-        let humid = 34;
-        let cds = 70;
-        let dist = 14.6;
-        // DB에 등록하기
-        dbModule.insertSensor(temp, humid, cds, dist, uid, function() {
-            // 화면에 보여주기
-            dbModule.getCurrentSensor(function(sensor) {
-                wm.getWeather(function(weather) {
-                    let navBar = template.navBar(false, weather, req.session.userName);
-                    let menuLink = template.menuLink(1);
-                    let view = require('./view/sensor');
-                    let html = view.sensor(navBar, menuLink, sensor);
-                    res.send(html);
+        sm.readSensor(function(sensor) {
+            let temp = sensor.temperature;
+            let humid = sensor.humidity;
+            let cds = sensor.cds;
+            let dist = sensor.distance;
+            dist = dist.toFixed(1);
+            // DB에 등록하기
+            dbModule.insertSensor(temp, humid, cds, dist, uid, function() {
+                // 화면에 보여주기
+                dbModule.getCurrentSensor(function(sensor) {
+                    wm.getWeather(function(weather) {
+                        let navBar = template.navBar(false, weather, req.session.userName);
+                        let menuLink = template.menuLink(1);
+                        let view = require('./view/sensor');
+                        let html = view.sensor(navBar, menuLink, sensor);
+                        res.send(html);
+                    });
                 });
             });
         });
@@ -89,11 +98,21 @@ app.post('/actuator', function(req, res) {
     let relay = parseInt(req.body.relay);
     let reason = req.body.reason;
     let uid = req.session.userId;
+
+    let actuator = new Object();
+    actuator.red = red;
+    actuator.green = green;
+    actuator.blue = blue;
+    actuator.relay = relay;
+    let jsonData = JSON.stringify(actuator);
+
     // DB에 삽입
     dbModule.insertActuator(red, green, blue, relay, reason, uid, function() {
         // 액츄에이터 구동
-        // home 화면으로 보내기
-        res.redirect('/home');
+        sm.writeActuator(jsonData, function() {
+            // home 화면으로 보내기
+            res.redirect('/home');
+        });
     });
 });
 app.get('/index', function(req, res) {
