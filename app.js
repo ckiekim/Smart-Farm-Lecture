@@ -66,6 +66,22 @@ app.get('/sensor', function(req, res) {
         });
     }
 });
+app.get('/actuator', function(req, res) {
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg('시스템을 사용하려면 먼저 로그인하세요.', '/');
+        res.send(html);
+    } else {
+        dbModule.getCurrentActuator(function(actuator) {
+            wm.getWeather(function(weather) {
+                let navBar = template.navBar(false, weather, req.session.userName);
+                let menuLink = template.menuLink(2);
+                let view = require('./view/actuator');
+                let html = view.actuator(navBar, menuLink, actuator);
+                res.send(html);
+            });
+        });
+    }
+}); 
 app.get('/index', function(req, res) {
     res.redirect('/');
 });
