@@ -1,5 +1,6 @@
 const template = require('./template');
 const header = template.header();
+const causes = ['정기적', '임시적', '비상사태', '초기값', '기타'];
 
 module.exports.actuator = function(navBar, menuLink, actuator) {
     let curR = actuator.redLED;
@@ -17,6 +18,13 @@ module.exports.actuator = function(navBar, menuLink, actuator) {
     else
         radio = `<input type="radio" name="relay" value="0">&nbsp;OFF&nbsp;&nbsp;&nbsp;&nbsp;
                  <input type="radio" name="relay" value="1" checked>&nbsp;ON<br>`;
+    let options = '';
+    for (cause of causes) {
+        if (reason.indexOf(cause) == 0)
+            options += `<option value="${cause}" selected>${cause}</option>`;
+        else
+            options += `<option value="${cause}">${cause}</option>`;
+    }
     return `
 <!DOCTYPE html>
 <html lang="ko">
@@ -65,20 +73,31 @@ module.exports.actuator = function(navBar, menuLink, actuator) {
                             </td></tr>
                         <tr><td style="text-align: center;">변경 사유</td>
                             <td style="text-align: center;">
-                                <select class="form-control" name="reason">
-                                    <option value="Periodical" selected>정기적</option>
-                                    <option value="Temporary">임시적</option>
+                                <select class="form-control" name="reason" id="reason" onChange="showReasonBox(value)">
+                                    ${options}
                                 </select>
+                            </td></tr>
+                        <tr><td></td>
+                            <td id="reasonBox" style="display:none">
+                                <input type="text" class="form-control" name="detail" placeholder="작동 이유를 기입하세요.">
                             </td></tr>
                         <tr><td colspan="2" style="text-align: center;"><button type="submit" class="btn btn-primary">작동</button></td></tr>
                     </table>
                     </form>
-                </div>
+                    </div>
                 <div class="col-1"></div><br>
-                </div>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    function showReasonBox(value) {
+        if (value === "기타")
+            document.getElementById("reasonBox").style.display = "block";
+        else
+            document.getElementById("reasonBox").style.display = "none";
+    }
+</script>
 </body>
 </html>
     `;

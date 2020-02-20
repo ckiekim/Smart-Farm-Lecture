@@ -1,5 +1,13 @@
 const template = require('./template');
 const header = template.header();
+const TEMP_LOW = 18.0;
+const TEMP_HIGH = 20.0;
+const HUMID_LOW = 20.0;
+const HUMID_HIGH = 28.0;
+const CDS_LOW = 65.0;
+const CDS_HIGH = 90.0;
+const DIST_LOW = 10.0;
+const DIST_HIGH = 30.0
 
 module.exports.home = function(navBar, menuLink, sensor, actuator) {
     let temp = sensor.temperature;
@@ -15,6 +23,20 @@ module.exports.home = function(navBar, menuLink, sensor, actuator) {
     let aTime = actuator.aTime;
     let reason = actuator.reason;
     let aUid = actuator.uid;
+
+    let tempColor, humidColor, cdsColor, distColor;
+    if (temp > TEMP_HIGH) tempColor = 'bg-danger';
+    else if (temp < TEMP_LOW) tempColor = 'bg-secondary';
+    else tempColor = 'bg-success';
+    if (humid > HUMID_HIGH) humidColor = 'bg-danger';
+    else if (humid < HUMID_LOW) humidColor = 'bg-secondary';
+    else humidColor = 'bg-success';
+    if (cds > CDS_HIGH) cdsColor = 'bg-danger';
+    else if (cds < CDS_LOW) cdsColor = 'bg-secondary';
+    else cdsColor = 'bg-success';
+    if (dist > DIST_HIGH) distColor = 'bg-danger';
+    else if (dist < DIST_LOW) distColor = 'bg-secondary';
+    else distColor = 'bg-success';
     return `
 <!DOCTYPE html>
 <html lang="ko">
@@ -44,43 +66,48 @@ module.exports.home = function(navBar, menuLink, sensor, actuator) {
                         </thead>
                         <tbody>
                         <tr>
-                            <td><i class="fas fa-thermometer-half"></i>&nbsp;&nbsp;온도</td>
-                            <td>0 ~ 40℃</td>
+                            <td><span style="color:orange"><i class="fas fa-thermometer-half"></i></span>&nbsp;&nbsp;온도</td>
+                            <td>0 ~ 40 ℃</td>
                             <td style="text-align: center;">
                                 <div class="progress" style="height: 25px; width: 400px">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: ${temp/40*100}%" aria-valuemin="0" aria-valuemax="40">${temp}</div>
+                                    <div class="progress-bar ${tempColor}" role="progressbar" style="width: ${temp/40*100}%" aria-valuemin="0" aria-valuemax="40">${temp}</div>
                                 </div></td>
                             <td>${sUid}</td>
                         </tr>
                         <tr>
-                            <td><i class="fas fa-tint"></i>&nbsp;&nbsp;습도</td>
-                            <td>0 ~ 60%</td>
+                            <td><span style="color:blue"><i class="fas fa-tint"></i></span>&nbsp;&nbsp;습도</td>
+                            <td>0 ~ 60 %</td>
                             <td style="text-align: center;">
                                 <div class="progress" style="height: 25px; width: 400px">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: ${humid/60*100}%" aria-valuemin="0" aria-valuemax="60">${humid}</div>
+                                    <div class="progress-bar ${humidColor}" role="progressbar" style="width: ${humid/60*100}%" aria-valuemin="0" aria-valuemax="60">${humid}</div>
                                 </div></td>
                             <td>${sUid}</td>
                         </tr>
                         <tr>
-                            <td><i class="far fa-lightbulb"></i>&nbsp;&nbsp;조도</td>
-                            <td>0 ~ 100</td>
+                            <td><span style="color:red"><i class="far fa-lightbulb"></i></span>&nbsp;&nbsp;조도</td>
+                            <td>0 ~ 250 lux</td>
                             <td style="text-align: center;">
                                 <div class="progress" style="height: 25px; width: 400px">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: ${cds/100*100}%" aria-valuemin="0" aria-valuemax="100">${cds}</div>
+                                    <div class="progress-bar ${cdsColor}" role="progressbar" style="width: ${cds/250*100}%" aria-valuemin="0" aria-valuemax="300">${cds}</div>
                                 </div></td>
                             <td>${sUid}</td>
                         </tr>
                         <tr>
-                            <td><i class="fas fa-ruler-vertical"></i>&nbsp;&nbsp;거리</td>
-                            <td>0 ~ 50cm</td>
+                            <td><span style="color:green"><i class="fas fa-ruler-vertical"></i></span>&nbsp;&nbsp;거리</td>
+                            <td>0 ~ 90 cm</td>
                             <td style="text-align: center;">
                                 <div class="progress" style="height: 25px; width: 400px">
-                                    <div class="progress-bar bg-dark" role="progressbar" style="width: ${dist/50*100}%" aria-valuemin="0" aria-valuemax="100">${dist}</div>
+                                    <div class="progress-bar ${distColor}" role="progressbar" style="width: ${dist/90*100}%" aria-valuemin="0" aria-valuemax="90">${dist}</div>
                                 </div></td>
                             <td>${sUid}</td>
                         </tr>
                         <tr>
-                            <td colspan="4" style="text-align: right;">최종 측정시각: ${sTime}</td>
+                            <td colspan="2">최종 측정시각: ${sTime}</td>
+                            <td colspan="2" style="text-align: right;">
+                                <span class="badge badge-success">정상</span>&nbsp;
+                                <span class="badge badge-danger">높음</span>&nbsp;
+                                <span class="badge badge-secondary">낮음</span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -98,7 +125,7 @@ module.exports.home = function(navBar, menuLink, sensor, actuator) {
                         </thead>
                         <tbody>
                         <tr>
-                            <td>적색 LED</td><td>0 ~ 255</td>
+                            <td>적색 <span class="badge badge-danger">LED</span></td><td>0 ~ 255</td>
                             <td style="text-align: center;">
                                 <div class="progress" style="height: 25px; width: 400px">
                                     <div class="progress-bar bg-danger" role="progressbar" style="width: ${red/255*100}%" aria-valuemin="0" aria-valuemax="255">${red}</div>
@@ -106,7 +133,7 @@ module.exports.home = function(navBar, menuLink, sensor, actuator) {
                             <td>${aUid}</td>
                         </tr>
                         <tr>
-                            <td>녹색 LED</td><td>0 ~ 255</td>
+                            <td>녹색 <span class="badge badge-success">LED</span></td><td>0 ~ 255</td>
                             <td style="text-align: center;">
                                 <div class="progress" style="height: 25px; width: 400px">
                                     <div class="progress-bar bg-success" role="progressbar" style="width: ${green/255*100}%" aria-valuemin="0" aria-valuemax="255">${green}</div>
@@ -114,7 +141,7 @@ module.exports.home = function(navBar, menuLink, sensor, actuator) {
                             <td>${aUid}</td>
                         </tr>
                         <tr>
-                            <td>청색 LED</td><td>0 ~ 255</td>
+                            <td>청색 <span class="badge badge-primary">LED</span></td><td>0 ~ 255</td>
                             <td style="text-align: center;">
                                 <div class="progress" style="height: 25px; width: 400px">
                                     <div class="progress-bar bg-primary" role="progressbar" style="width: ${blue/255*100}%" aria-valuemin="0" aria-valuemax="255">${blue}</div>
@@ -130,8 +157,8 @@ module.exports.home = function(navBar, menuLink, sensor, actuator) {
                             <td>${aUid}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">조작 사유: ${reason}</td>
-                            <td colspan="2" style="text-align: right;">최종 조작시각: ${aTime}</td>
+                            <td colspan="2">최종 조작시각: ${aTime}</td>
+                            <td colspan="2" style="text-align: right;">조작 사유: ${reason}</td>
                         </tr>
                         </tbody>
                     </table>

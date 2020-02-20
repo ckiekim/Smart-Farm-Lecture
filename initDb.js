@@ -54,7 +54,7 @@ const createSensorSql = `
 const insertDeptSql = "INSERT INTO dept VALUES(?, ?)";
 const insertUserSql = "INSERT INTO user(uid, password, name, deptId, tel) VALUES('admin', '1234', '관리자', 101, '010-2345-6789')";
 const selectDeptSql = "SELECT * FROM dept";
-const insertActuatorSql = "INSERT INTO actuator(reason, uid) VALUES('Initial value', 'admin')";
+const insertActuatorSql = "INSERT INTO actuator(reason, uid) VALUES('초기값', 'admin')";
 const insertSensorSql = "INSERT INTO sensor(uid) VALUES('admin')";
 const records = [
     {did: 101, name: '경영지원팀'},

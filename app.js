@@ -101,6 +101,10 @@ app.post('/actuator', function(req, res) {
     let blue = parseInt(req.body.blueRange);
     let relay = parseInt(req.body.relay);
     let reason = req.body.reason;
+    if (reason === '기타') {
+        let detail = req.body.detail;
+        reason += ` - ${detail}`;
+    }
     let uid = req.session.userId;
 
     let actuator = new Object();

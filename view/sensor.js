@@ -62,25 +62,32 @@ module.exports.sensor = function(navBar, menuLink, sensor) {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                                <td><i class="fas fa-thermometer-half"></i>&nbsp;&nbsp;온도</td>
+                            <tr>
+                                <td><span style="color:orange"><i class="fas fa-thermometer-half"></i></span>&nbsp;&nbsp;온도</td>
                                 <td>${TEMP_LOW} ~ ${TEMP_HIGH}</td>
                                 <td>${temp}</td><td>℃</td><td>${tempSign}</td>
                             </tr>
                             <tr>
-                                <td><i class="fas fa-tint"></i>&nbsp;&nbsp;습도</td>
+                                <td><span style="color:blue"><i class="fas fa-tint"></i></span>&nbsp;&nbsp;습도</td>
                                 <td>${HUMID_LOW} ~ ${HUMID_HIGH}</td>
                                 <td>${humid}</td><td>%</td><td>${humidSign}</td>
                             </tr>
                             <tr>
-                                <td><i class="far fa-lightbulb"></i>&nbsp;&nbsp;조도</td>
+                                <td><span style="color:red"><i class="far fa-lightbulb"></i></span>&nbsp;&nbsp;조도</td>
                                 <td>${CDS_LOW} ~ ${CDS_HIGH}</td>
                                 <td>${cds}</td><td>lux</td><td>${cdsSign}</td>
                             </tr>
                             <tr>
-                                <td><i class="fas fa-ruler-vertical"></i>&nbsp;&nbsp;거리</td>
+                                <td><span style="color:green"><i class="fas fa-ruler-vertical"></i></span>&nbsp;&nbsp;거리</td>
                                 <td>${DIST_LOW} ~ ${DIST_HIGH}</td>
                                 <td>${dist}</td><td>cm</td><td>${distSign}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" style="text-align: right;">
+                                    <span style="color:green"><i class="far fa-thumbs-up"></i></span> 정상&nbsp&nbsp;
+                                    <span style="color:red"><i class="fas fa-arrow-up"></i></span> 높음</span>&nbsp&nbsp;
+                                    <span style="color:blue"><i class="fas fa-arrow-down"></i></span> 낮음
+                                </td>
                             </tr>
                         </tbody>
                     </table>
