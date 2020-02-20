@@ -5,19 +5,23 @@ const template = require('./view/template');
 const wm = require('./weather-module');
 
 const router = express.Router();
-router.get('/list', function(req, res) {        // 로그인만 하면 누구나 할 수 있음.
+router.get('/list/page/:page', function(req, res) {        // 로그인만 하면 누구나 할 수 있음.
     if (req.session.userId === undefined) {
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
     } else {
+        let pageNo = parseInt(req.params.page);
         wm.getWeather(function(weather) {
             let navBar = template.navBar(false, weather, req.session.userName);
             let menuLink = template.menuLink(3);
-            dbModule.getAllUsers(function(rows) {
-                let view = require('./view/listUser');
-                let html = view.listUser(navBar, menuLink, rows);
-                //console.log(rows);
-                res.send(html);
+            dbModule.getUsers(pageNo, function(users) {
+                dbModule.getUserCount(function(result) {        // 페이지 지원
+                    let totalPage = Math.ceil(result.count / 10);
+                    let view = require('./view/listUser');
+                    let html = view.listUser(navBar, menuLink, users, totalPage, pageNo);
+                    //console.log(rows);
+                    res.send(html);
+                });
             });
         });
     }

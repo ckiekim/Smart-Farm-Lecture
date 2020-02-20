@@ -1,7 +1,7 @@
 const template = require('./template');
 const header = template.header();
 
-module.exports.listUser = function(navBar, menuLink, userObj) {
+module.exports.listUser = function(navBar, menuLink, userObj, totalPage, pageNo) {
     let users = '';
     for (user of userObj) {
         users += `
@@ -13,6 +13,26 @@ module.exports.listUser = function(navBar, menuLink, userObj) {
                     <a href="/user/delete/uid/${user.uid}"><i class="fas fa-trash-alt"></i></td>
             </tr>`;
     }
+    // 페이지 지원
+    let pages = `<li class="page-item disabled">
+                    <a class="page-link active" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span></a>
+                </li>`;
+    for (let page=1; page <= totalPage; page++) {
+        if (page == pageNo)
+            pages += `<li class="page-item active" aria-current="page">
+                        <span class="page-link">
+                            ${page}<span class="sr-only">(current)</span>
+                        </span>
+                    </li>`;
+        else
+            pages += `<li class="page-item"><a class="page-link" href="/user/list/page/${page}">${page}</a></li>`;
+    }
+    pages += `<li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span></a>
+            </li>`;
+
     return `
 <!DOCTYPE html>
 <html lang="ko">
@@ -43,6 +63,9 @@ module.exports.listUser = function(navBar, menuLink, userObj) {
                                 ${users}
                             </tbody>
                         </table>
+                        <ul class="pagination justify-content-center">
+                            ${pages}
+                        </ul>
                     </div>
                     <div class="col-1"></div>
                 </div>

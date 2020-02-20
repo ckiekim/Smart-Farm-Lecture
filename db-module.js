@@ -39,6 +39,21 @@ module.exports = {
         });
         db.close();
     },
+    getUsers: function(pageNo, callback) {                  // 페이지 지원
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let offset = (pageNo - 1) * 10;
+        let sql = `SELECT l.uid, l.name, r.name deptName, l.tel, strftime('%Y-%m-%d', regDate, 'localtime') ts FROM user l join dept r on l.deptId = r.did LIMIT 10 OFFSET ?`;
+        let stmt = db.prepare(sql);
+        stmt.all(offset, function(err, rows) {
+            if (err) {
+                console.error('getUsers DB 오류', err);
+                return;
+            }
+            callback(rows);
+        });
+        stmt.finalize();
+        db.close();
+    },
     getUserInfo: function(uid, callback) {
         let db = new sqlite3.Database("db/smartfarm.db");
         //let sql = `SELECT l.uid, l.name, r.name deptName, l.tel, strftime('%Y-%m-%d', regDate, 'localtime') ts FROM user l join dept r on l.deptId = r.did where uid=?`;
@@ -52,6 +67,18 @@ module.exports = {
             callback(row);
         });
         stmt.finalize();
+        db.close();
+    },
+    getUserCount: function(callback) {                      // 페이지 지원
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `SELECT count(*) count FROM user`;
+        db.each(sql, function(err, row) {
+            if (err) {
+                console.error('getUserCount DB 오류', err);
+                return;
+            }
+            callback(row);
+        });
         db.close();
     },
     registerUser: function(uid, password, name, deptId, tel, callback) {
