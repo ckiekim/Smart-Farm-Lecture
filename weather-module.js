@@ -1,7 +1,9 @@
 const request = require('request');
 const template = require('./view/template');
+const fs = require('fs');
 const apiURI = 'http://api.openweathermap.org/data/2.5/weather?q=Yongin,kr&units=metric&appid=';
-const apiKey = '9e9e4eefc93b5af91c70bd666c346dc8';
+// Open Weather(https://openweathermap.org/) 에 접속해서 본인의 API Key를 받은 후 본인 것을 사용하세요.
+const apiKey = fs.readFileSync(__dirname + '/public/apiKey.txt');
  
 module.exports = {
     getWeather: function(callback) {
