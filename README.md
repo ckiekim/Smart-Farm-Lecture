@@ -15,9 +15,9 @@ NodeJS, SQLite3, Bootstrap으로 구현하였습니다.
 
 ## 주의 사항
 ###  다음의 모듈을 npm을 사용하여 설치하세요.
-express, body-parser, express-favicon, express-session, session-file-store<br>
-sqlite3, serialport, @serialport/parser-readline<br>
-bootstrap, jquery, popper.js, @fortawesome/fontawesome-free
+- express, body-parser, express-favicon, express-session, session-file-store
+- sqlite3, serialport, @serialport/parser-readline
+- bootstrap, jquery, popper.js, @fortawesome/fontawesome-free
 
 ### [Open Weather](https://openweathermap.org/)에서 API Key를 획득한 후 본인 것을 사용하세요.
 
