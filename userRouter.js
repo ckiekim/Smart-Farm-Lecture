@@ -114,8 +114,10 @@ router.post('/update', function(req, res) {
     dbModule.getUserInfo(uid, function(user) {
         if (changePswd === undefined) {         // 패스워드 변경 체크박스가 uncheck 되었을 때
             dbModule.updateUser(uid, user.password, name, deptId, tel, function() {
-                //console.log("Redirect to /user/list");
-                res.redirect('/user/list/page/1');
+                dbModule.getBeforeUserCount(uid, function(count) {      // 페이지 지원
+                    let pageNo = Math.ceil((count.count + 1) / 10);
+                    res.redirect(`/user/list/page/${pageNo}`);
+                });
             });
         } else {    // check 되었을 때
             if (oldPswd !== user.password) {    // 현재 패스워드가 틀렸을 때
@@ -129,8 +131,10 @@ router.post('/update', function(req, res) {
                 res.send(html);
             } else {            // 모든 조건을 만족시켰을 때
                 dbModule.updateUser(uid, pswd, name, deptId, tel, function() {
-                    //console.log("Redirect to /user/list finally");
-                    res.redirect('/user/list/page/1');
+                    dbModule.getBeforeUserCount(uid, function(count) {      // 페이지 지원
+                        let pageNo = Math.ceil((count.count + 1) / 10);
+                        res.redirect(`/user/list/page/${pageNo}`);
+                    });
                 });
             }
         }
@@ -161,8 +165,11 @@ router.get('/delete/uid/:uid', function(req, res) {     // 관리자로 로그�
 });
 router.post('/delete', function(req, res) {
     let uid = req.body.uid;
-    dbModule.deleteUser(uid, function() {
-        res.redirect('/user/list/page/1');
+    dbModule.getBeforeUserCount(uid, function(count) {      // 페이지 지원
+        let pageNo = Math.ceil(count.count / 10);
+        dbModule.deleteUser(uid, function() {
+            res.redirect(`/user/list/page/${pageNo}`);
+        });
     });
 });
 router.post('/login', function(req, res) {
@@ -177,7 +184,7 @@ router.post('/login', function(req, res) {
             let html = alert.alertMsg('패스워드가 일치하지 않습니다.', '/');
             res.send(html);
         } else {                // Login 성공
-            console.log(`${uid} login 성공`);
+            //console.log(`${uid} login 성공`);
             req.session.userId = uid;
             req.session.userName = user.name;
             let html = alert.alertMsg(`${user.name} 님 환영합니다.`, '/home');

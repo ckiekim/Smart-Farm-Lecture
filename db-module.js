@@ -81,6 +81,20 @@ module.exports = {
         });
         db.close();
     },
+    getBeforeUserCount: function(uid, callback) {           // 페이지 지원 - update/delete 시
+        let db = new sqlite3.Database("db/smartfarm.db");
+        let sql = `select count(*) count from user where rowid < (select rowid from user where uid = ?)`;
+        let stmt = db.prepare(sql);
+        stmt.get(uid, function(err, row) {
+            if (err) {
+                console.error('getBeforeUserCount DB 오류', err);
+                return;
+            }
+            callback(row);
+        });
+        stmt.finalize();
+        db.close();
+    },
     registerUser: function(uid, password, name, deptId, tel, callback) {
         let db = new sqlite3.Database("db/smartfarm.db");
         let sql = `INSERT INTO user(uid, password, name, deptId, tel) values (?,?,?,?,?)`;
