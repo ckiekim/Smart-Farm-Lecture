@@ -128,8 +128,21 @@ app.post('/actuator', function(req, res) {
 
     });
 });
-app.get('/index', function(req, res) {
-    res.redirect('/');
+app.get('/gallery', function(req, res) {
+    if (req.session.userId === undefined) {
+        let html = alert.alertMsg('시스템을 사용하려면 먼저 로그인하세요.', '/');
+        res.send(html);
+    } else {
+        let view = require('./view/gallery');
+        wm.getWeather(function(weather) {
+            let navBar = template.navBar(false, weather, req.session.userName);
+            let menuLink = template.menuLink(4);
+            wm.weatherObj(function(result) {
+                let html = view.gallery(navBar, menuLink, result);
+                res.send(html);
+            });
+        });
+    }
 });
 app.get('/weather', function(req, res) {
     if (req.session.userId === undefined) {
