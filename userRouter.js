@@ -31,7 +31,7 @@ router.get('/register', function(req, res) {    // 관리자로 로그인해야 
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
     } else if (req.session.userId != 'admin') {
-        let html = alert.alertMsg(`사용자를 등록할 권한이 없습니다.`, '/user/list');
+        let html = alert.alertMsg(`사용자를 등록할 권한이 없습니다.`, '/user/list/page/1');
         res.send(html);
     } else {
         wm.getWeather(function(weather) {
@@ -62,7 +62,11 @@ router.post('/register', function(req, res) {
                 res.send(html);
             } else if (pswd === pswd2) {
                 dbModule.registerUser(uid, pswd, name, deptId, tel, function() {
-                    res.redirect('/user/list');
+                    // 페이지 지원
+                    dbModule.getUserCount(function(count) {
+                        let pageNo = Math.ceil(count.count/10);
+                        res.redirect(`/user/list/page/${pageNo}`);
+                    });
                 });
             } else {
                 let html = alert.alertMsg('패스워드가 일치하지 않습니다.', '/user/register');
@@ -80,7 +84,7 @@ router.get('/update/uid/:uid', function(req, res) {     // 본인 것만 수정�
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
     } else if (uid !== req.session.userId) {
-        let html = alert.alertMsg(`본인 것만 수정할 수 있습니다.`, '/user/list');
+        let html = alert.alertMsg(`본인 것만 수정할 수 있습니다.`, '/user/list/page/1');
         res.send(html);
     } else {
         wm.getWeather(function(weather) {
@@ -111,7 +115,7 @@ router.post('/update', function(req, res) {
         if (changePswd === undefined) {         // 패스워드 변경 체크박스가 uncheck 되었을 때
             dbModule.updateUser(uid, user.password, name, deptId, tel, function() {
                 //console.log("Redirect to /user/list");
-                res.redirect('/user/list');
+                res.redirect('/user/list/page/1');
             });
         } else {    // check 되었을 때
             if (oldPswd !== user.password) {    // 현재 패스워드가 틀렸을 때
@@ -126,7 +130,7 @@ router.post('/update', function(req, res) {
             } else {            // 모든 조건을 만족시켰을 때
                 dbModule.updateUser(uid, pswd, name, deptId, tel, function() {
                     //console.log("Redirect to /user/list finally");
-                    res.redirect('/user/list');
+                    res.redirect('/user/list/page/1');
                 });
             }
         }
@@ -137,23 +141,28 @@ router.get('/delete/uid/:uid', function(req, res) {     // 관리자로 로그�
         let html = alert.alertMsg(`시스템을 사용하려면 먼저 로그인하세요.`, '/');
         res.send(html);
     } else if (req.session.userId !== 'admin') {
-        let html = alert.alertMsg(`사용자를 삭제할 권한이 없습니다.`, '/user/list');
+        let html = alert.alertMsg(`사용자를 삭제할 권한이 없습니다.`, '/user/list/page/1');
         res.send(html);
     } else {
         let uid = req.params.uid;
-        wm.getWeather(function(weather) {
-            let navBar = template.navBar(false, weather, req.session.userName);
-            let menuLink = template.menuLink(3);
-            let view = require('./view/deleteUser');
-            let html = view.deleteUser(navBar, menuLink, uid);  
+        if (uid === 'admin') {
+            let html = alert.alertMsg(`사용자를 삭제할 권한이 없습니다.`, '/user/list/page/1');
             res.send(html);
-        });
+        } else {
+            wm.getWeather(function(weather) {
+                let navBar = template.navBar(false, weather, req.session.userName);
+                let menuLink = template.menuLink(3);
+                let view = require('./view/deleteUser');
+                let html = view.deleteUser(navBar, menuLink, uid);  
+                res.send(html);
+            });
+        }
     }
 });
 router.post('/delete', function(req, res) {
     let uid = req.body.uid;
     dbModule.deleteUser(uid, function() {
-        res.redirect('/user/list');
+        res.redirect('/user/list/page/1');
     });
 });
 router.post('/login', function(req, res) {
